@@ -352,14 +352,12 @@ OUR SERVICES
   -webkit-tap-highlight-color:transparent;
 }
 
-.scurbServiceCard:active{
-  transform:scale(.98);
-}
+
 
 .scurbServiceImageBox{
   position:relative;
   width:100%;
-  height:105px;
+  height:125px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -375,6 +373,12 @@ OUR SERVICES
   user-select:none;
   -webkit-user-drag:none;
 }
+
+
+
+
+
+
 .scurbServiceAddBtn{
   position:absolute;
   right:2px;
@@ -391,7 +395,7 @@ OUR SERVICES
   border:1px solid #dff5e8;
   border-radius:12px;
 
-  background:#fff;
+  background:#ffffff;
   color:#14b9bb;
 
   box-shadow:0 4px 12px rgba(0,0,0,.14);
@@ -400,66 +404,84 @@ OUR SERVICES
   overflow:hidden;
   z-index:2;
 
-  transition:
-    width .28s ease,
-    transform .18s ease,
-    background .25s ease;
+  font-family:inherit;
+  font-size:27px;
+  font-weight:400;
+  line-height:1;
+
+  transition:width .28s ease;
 
   -webkit-tap-highlight-color:transparent;
 }
 
-.scurbServiceAddBtn:active{
-  transform:scale(.94);
-}
+/* Initial small + */
 
 .scurbServiceAddBtn .scurbSinglePlus{
-  font-size:27px;
-  font-weight:400;
-  line-height:1;
-}
-
-/* Expanded − 1 + mode */
-
-.scurbServiceAddBtn.scurbQtyMode{
-  width:88px;
-  justify-content:space-between;
-  padding:0 9px;
-}
-
-.scurbServiceAddBtn.scurbQtyMode button{
-  width:20px;
-  height:28px;
+  width:100%;
+  height:100%;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  padding:0;
-  margin:0;
-  border:none;
-  background:transparent;
+  color:#14b9bb;
+  font-family:inherit;
+  font-size:27px;
+  font-weight:400;
+  line-height:1;
+}
+
+/* Expanded − quantity + */
+
+.scurbServiceAddBtn.scurbQtyMode{
+  width:88px;
+  padding:0 9px;
+  justify-content:space-between;
+}
+
+/* Use spans, not buttons inside button */
+
+.scurbServiceMinus,
+.scurbServicePlus{
+  width:20px;
+  height:30px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex:none;
 
   color:#14b9bb;
+  font-family:inherit;
   font-size:21px;
   font-weight:600;
   line-height:1;
 
   cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
 
-.scurbServiceAddBtn.scurbQtyMode .scurbServiceQty{
+.scurbServiceQty{
   min-width:16px;
-  text-align:center;
 
-  color:#222;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:#222222;
+  font-family:inherit;
   font-size:13px;
   font-weight:700;
+  line-height:1;
 }
 
-/* Small appearing animation */
+/* Optional quantity appearance */
 
-.scurbServiceAddBtn.scurbQtyMode button,
+.scurbServiceAddBtn.scurbQtyMode .scurbServiceMinus,
+.scurbServiceAddBtn.scurbQtyMode .scurbServicePlus,
 .scurbServiceAddBtn.scurbQtyMode .scurbServiceQty{
   animation:scurbQtyAppear .25s ease;
 }
@@ -476,20 +498,20 @@ OUR SERVICES
   }
 }
 
+
 .scurbServiceInfo{
   min-height:10px;
-  padding:12px 8px 15px;
+  padding:12px 8px 20px;
 }
-
 .scurbServiceInfo h3{
   margin:0;
   min-height:1px;
 
   font-family:inherit;
   font-size:12px;
-  font-weight:500;
+  font-weight:600;
   line-height:1.35;
-  color:#222;
+  color:#000000;
 
   display:-webkit-box;
   -webkit-line-clamp:2;
@@ -497,10 +519,29 @@ OUR SERVICES
   overflow:hidden;
 }
 
-.scurbServiceInfo p{
-  margin:6px 0 0;
+.scurbServicePriceRow{
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:5px;
+
+  margin-top:6px;
+  white-space:nowrap;
+}
+
+.scurbServicePrice{
+  color:#111111;
   font-size:14px;
   font-weight:700;
-  color:#111;
   line-height:1;
+}
+
+.scurbServiceOldPrice{
+  color:#999999;
+  font-size:11px;
+  font-weight:500;
+  line-height:1;
+
+  text-decoration-line:line-through;
+  text-decoration-thickness:1px;
 }
