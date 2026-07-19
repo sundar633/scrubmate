@@ -23,7 +23,31 @@
 .location-page.show{
   display:flex;
 }
+.scrub-location-spinner{
+  width:24px;
+  height:24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:currentColor;
+}
 
+.scrub-location-spinner svg{
+  width:24px;
+  height:24px;
+  display:block;
+  animation:scrubLocationSpin .75s linear infinite;
+}
+
+@keyframes scrubLocationSpin{
+  from{
+    transform:rotate(0deg);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+}
 .location-header{
   position:relative;
   z-index:2;
