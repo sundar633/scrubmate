@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+
+<title>Scurb Mate - Login</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Lobster&family=Playfair+Display:wght@700&display=swap"
+  rel="stylesheet"
+>
+
+<link href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700;800&display=swap" rel="stylesheet">
+
+
+<style>
+
+:root{
+  --primary:#14b9bb;
+  --primary-dark:#079fa2;
+  --text:#111111;
+  --muted:#8b8b8b;
+  --border:#cacaca;
+  --disabled:#c8c8c8;
+  --page-width:760px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  scrollbar-width:none;
+}
+
+*::-webkit-scrollbar{
+  width:0;
+  height:0;
+  display:none;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
+  background:#f4f4f4;
+}
+
+body{
+  position:fixed;
+  inset:0;
+  color:var(--text);
+ 
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+input{
+  min-width:0;
+}
+
+.app{
+  position:relative;
+  width:min(100%, var(--page-width));
+  height:100%;
+  margin-inline:auto;
+  background:#ffffff;
+  overflow:hidden;
+
+  display:grid;
+  grid-template-rows:
+    minmax(210px, 34%)
+    minmax(205px, 35%)
+    minmax(190px, 31%);
+}
+
+/* =========================
+   TOP HERO
+========================= */
+
+.hero{
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:0;
+
+  padding:
+    calc(env(safe-area-inset-top, 0px) + clamp(12px, 2vh, 22px))
+    clamp(16px, 4vw, 38px)
+    clamp(18px, 3vh, 34px);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  color:#ffffff;
+  overflow:hidden;
+
+  border-radius:
+    0 0
+    clamp(45px, 10vw, 90px)
+    clamp(45px, 10vw, 90px);
+
+  background:
+    linear-gradient(
+      135deg,
+      #079ea2 0%,
+      #15b5b7 45%,
+      #20c7c8 100%
+    );
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      125deg,
+      transparent 0%,
+      rgba(255,255,255,.035) 24%,
+      transparent 25%,
+      transparent 49%,
+      rgba(255,255,255,.035) 50%,
+      transparent 51%,
+      transparent 74%,
+      rgba(255,255,255,.03) 75%,
+      transparent 76%
+    );
+
+  background-size:190px 190px;
+}
+
+.skip-button{
+  position:absolute;
+  z-index:2;
+
+  top:calc(env(safe-area-inset-top, 0px) + 45px);
+  right:18px;
+
+  min-width:110px;
+  height:42px;
+  padding:0 16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:none;
+  border-radius:999px;
+
+  background:rgba(0,115,118,.30);
+  color:#fff;
+
+  font-size:15px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 6px 14px rgba(0,0,0,.08);
+
+  transition:all .2s ease;
+}
+
+.skip-button:active{
+  transform:scale(.96);
+}
+
+
+.brand-block{
+  position:relative;
+  z-index:1;
+  margin-top:clamp(40px, 8vh, 90px);
+}
+
+.brand-name{
+  font-family:"Merienda",cursive;
+  font-size:clamp(30px,5.5vh,50px);
+  font-weight:800;
+  line-height:.95;
+  letter-spacing:-1px;
+}
+
+.tagline{
+  max-width:540px;
+  margin-top:clamp(12px, 2.5vh, 28px);
+
+  font-family:"Playfair Display",serif;
+  font-size:clamp(14px, 2.6vh, 27px);
+  font-weight:700;
+  line-height:1.3;
+}
+
+/* =========================
+   MOVING IMAGE ROWS
+========================= */
+
+.services-marquee{
+  width:100%;
+  height:100%;
+  min-height:0;
+
+  padding-block:clamp(8px, 1.4vh, 14px);
+
+  display:grid;
+  grid-template-rows:repeat(3, minmax(0, 1fr));
+  gap:clamp(7px, 1vh, 12px);
+
+  background:#ffffff;
+  overflow:hidden;
+}
+
+.marquee-row{
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+
+.marquee-track{
+  width:max-content;
+  height:100%;
+
+  display:flex;
+  align-items:center;
+
+  gap:clamp(8px, 1.5vw, 14px);
+  padding-inline:5px;
+
+  will-change:transform;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+
+.move-left{
+  animation:scrollLeft 28s linear infinite;
+}
+
+.move-right{
+  animation:scrollRight 30s linear infinite;
+}
+
+.marquee-row:nth-child(3) .marquee-track{
+  animation-duration:32s;
+}
+
+.service-card{
+  flex:none;
+  width:clamp(92px, 20vw, 155px);
+  height:100%;
+
+  overflow:hidden;
+  border-radius:clamp(14px, 3vw, 24px);
+
+  background:#eafafa;
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,.035),
+    inset 0 0 0 1px rgba(9,156,160,.04);
+}
+
+.service-card img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+@keyframes scrollLeft{
+  from{
+    transform:translate3d(0,0,0);
+  }
+
+  to{
+    transform:translate3d(calc(-50% - 7px),0,0);
+  }
+}
+
+@keyframes scrollRight{
+  from{
+    transform:translate3d(calc(-50% - 7px),0,0);
+  }
+
+  to{
+    transform:translate3d(0,0,0);
+  }
+}
+
+/* =========================
+   LOGIN AREA
+========================= */
+
+.login-section{
+  position:relative;
+
+  width:100%;
+  height:100%;
+  min-height:0;
+
+  padding:
+    clamp(8px, 1.5vh, 16px)
+    clamp(22px, 7vw, 55px)
+    calc(
+      env(safe-area-inset-bottom, 0px) +
+      clamp(10px, 1.8vh, 20px)
+    );
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  background:#fff;
+  overflow:visible;
+}
+
+.login-section::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:-32px;
+  height:32px;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,1)
+  );
+
+  pointer-events:none;
+}
+
+.login-title{
+  margin-top:-8px;
+  margin-bottom:25px;
+
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:0;
+}
+
+.phone-field{
+  width:100%;
+  min-height:clamp(54px, 7vh, 72px);
+
+  display:flex;
+  align-items:center;
+
+  border:2px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  background:#ffffff;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.phone-field:focus-within{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(20,185,187,.11);
+}
+
+.country-code{
+  flex:none;
+
+  padding-left:12px;
+  padding-right:8px;
+
+  color:#222;
+  font-size:14px;
+  font-weight:700;
+}
+
+.phone-field{
+  height:46px;
+}
+
+.phone-field input{
+  width:100%;
+  height:100%;
+
+  border:none;
+  outline:none;
+  background:transparent;
+
+  color:#181818;
+  font-size:14px;
+  font-weight:600;
+
+  padding:10px 12px 10px 0;
+}
+
+.phone-field input::placeholder{
+  color:#929292;
+  opacity:1;
+  font-size:14px;
+  font-weight:500;
+}
+
+.error-text{
+  min-height:8px;
+  margin:5px 20px 0;
+
+  color:#d93434;
+  font-size:12px;
+  font-weight:600;
+}
+
+.continue-button{
+  width:100%;
+  min-height:46px;
+  margin-top:2px;
+
+  border:none;
+  border-radius:12px;
+
+  color:#ffffff;
+  background:var(--disabled);
+
+  font-size:16px;
+  font-weight:700;
+
+  cursor:not-allowed;
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.continue-button.enabled{
+  cursor:pointer;
+  background:var(--primary);
+  box-shadow:0 10px 25px rgba(20,185,187,.23);
+}
+
+.continue-button.enabled:active{
+  transform:scale(.985);
+  background:var(--primary-dark);
+}
+
+.terms{
+  width:100%;
+  margin-top:12px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+
+  color:#969696;
+  font-size:clamp(10px,1.5vw,13px);
+  line-height:1;
+  text-align:center;
+}
+
+.terms a{
+  color:#666666;
+  font-weight:700;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  white-space:nowrap;
+}
+
+/* =========================
+   OTP POPUP
+========================= */
+
+.otp-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+
+  padding-top:env(safe-area-inset-top, 0px);
+
+  background:rgba(0,0,0,.42);
+
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+
+  opacity:0;
+  visibility:hidden;
+
+  overflow:hidden;
+
+  transition:
+    opacity .25s ease,
+    visibility .25s ease;
+}
+
+.otp-overlay.show{
+  opacity:1;
+  visibility:visible;
+}
+
+.otp-sheet{
+  width:min(100%, var(--page-width));
+  max-height:calc(100% - env(safe-area-inset-top, 0px));
+
+  padding:
+    clamp(20px, 4vh, 36px)
+    clamp(24px, 7vw, 55px)
+    calc(
+      env(safe-area-inset-bottom, 0px) +
+      clamp(22px, 4vh, 40px)
+    );
+
+  border-radius:
+    clamp(28px, 6vw, 44px)
+    clamp(28px, 6vw, 44px)
+    0 0;
+
+  background:#ffffff;
+  overflow:hidden;
+
+  transform:translateY(100%);
+
+  transition:
+    transform .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.otp-overlay.show .otp-sheet{
+  transform:translateY(0);
+}
+
+.otp-handle{
+  width:54px;
+  height:5px;
+  margin:0 auto clamp(18px, 3vh, 26px);
+
+  border-radius:999px;
+  background:#dddddd;
+}
+
+.otp-sheet h2{
+  font-size:clamp(25px, 4vh, 38px);
+  font-weight:800;
+  text-align:center;
+}
+
+.otp-sheet p{
+  margin-top:10px;
+
+  color:#777777;
+  font-size:clamp(14px, 2.3vh, 18px);
+  line-height:1.5;
+  text-align:center;
+}
+
+.otp-sheet strong{
+  color:#222222;
+}
+
+.otp-input{
+  width:100%;
+  min-height:clamp(58px, 8vh, 74px);
+  margin-top:clamp(18px, 3vh, 28px);
+
+  border:2px solid var(--border);
+  border-radius:22px;
+  outline:none;
+
+  text-align:center;
+  font-size:clamp(24px, 4vh, 30px);
+  font-weight:800;
+  letter-spacing:10px;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.otp-input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(20,185,187,.11);
+}
+
+.verify-button,
+.close-button{
+  width:100%;
+  min-height:clamp(54px, 7vh, 68px);
+
+  border:none;
+  border-radius:999px;
+
+  font-size:clamp(18px, 2.8vh, 21px);
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+.verify-button{
+  margin-top:clamp(14px, 2.5vh, 20px);
+  color:#ffffff;
+  background:var(--primary);
+}
+
+.close-button{
+  margin-top:10px;
+  color:#333333;
+  background:#eeeeee;
+}
+
+/* Pause only while pressing a moving row */
+
+.marquee-row:active .marquee-track{
+  animation-play-state:paused;
+}
+
+</style>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<main class="app">
+
+  <!-- =========================
+       TOP SECTION
+  ========================== -->
+  <section class="hero">
+
+    <button
+      type="button"
+      class="skip-button"
+      id="skipButton"
+    >
+      Skip login
+    </button>
+
+    <div class="brand-block">
+
+      <h1 class="brand-name">
+        Scurb Mate
+      </h1>
+
+      <p class="tagline">
+        Get professional<br>
+        house help in minutes
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       MOVING SERVICES
+  ========================== -->
+  <section class="services-marquee">
+
+    <!-- FIRST ROW: LEFT -->
+    <div class="marquee-row">
+
+      <div class="marquee-track move-left">
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="Cleaning service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="Window cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="Kitchen cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="Home cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="Bathroom cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="Cooking service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="Ironing service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="Deep cleaning">
+        </div>
+
+        <!-- Duplicate images for smooth infinite movement -->
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SECOND ROW: RIGHT -->
+    <div class="marquee-row">
+
+      <div class="marquee-track move-right">
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="Bathroom cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="Home cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="Deep cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="Cooking service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="Kitchen cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="Cleaning service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="Ironing service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="Window cleaning">
+        </div>
+
+        <!-- Duplicate images -->
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- THIRD ROW: LEFT -->
+    <div class="marquee-row">
+
+      <div class="marquee-track move-left">
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="Cooking service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="Window cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="Ironing service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="Cooking service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="Cleaning service">
+        </div>
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="Deep cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="Kitchen cleaning">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="Bathroom cleaning">
+        </div>
+
+        <!-- Duplicate images -->
+
+        <div class="service-card">
+          <img src="images/6.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/7.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/8.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/4.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/2.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/1.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/5.webp" alt="">
+        </div>
+
+        <div class="service-card">
+          <img src="images/3.webp" alt="">
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       LOGIN SECTION
+  ========================== -->
+  <section class="login-section">
+
+    <h2 class="login-title">
+      Login or Sign up
+    </h2>
+
+    <div class="phone-field">
+
+      <span class="country-code">
+        +91
+      </span>
+
+      <input
+        type="tel"
+        id="mobileInput"
+        inputmode="numeric"
+        autocomplete="tel"
+        maxlength="10"
+        placeholder="Enter mobile number"
+        aria-label="Enter mobile number"
+      >
+
+    </div>
+
+    <p class="error-text" id="errorText"></p>
+
+    <button
+      type="button"
+      class="continue-button"
+      id="continueButton"
+      disabled
+    >
+      Continue
+    </button>
+
+   <div class="terms">
+  <span>By continuing, you agree to our</span>
+  <a href="#">Terms of Service</a>
+  <span>&</span>
+  <a href="#">Privacy Policy</a>
+</div>
+
+  </section>
+
+</main>
+
+
+<!-- =========================
+     OTP POPUP
+========================== -->
+<div class="otp-overlay" id="otpOverlay">
+
+  <div class="otp-sheet">
+
+    <div class="otp-handle"></div>
+
+    <h2>Verify mobile number</h2>
+
+    <p>
+      We sent a 6-digit OTP to
+      <strong id="displayMobile"></strong>
+    </p>
+
+    <input
+      type="tel"
+      id="otpInput"
+      class="otp-input"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="000000"
+      aria-label="Enter OTP"
+    >
+
+    <button
+      type="button"
+      class="verify-button"
+      id="verifyButton"
+    >
+      Verify OTP
+    </button>
+
+    <button
+      type="button"
+      class="close-button"
+      id="closeOtpButton"
+    >
+      Close
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const mobileInput = document.getElementById("mobileInput");
+const continueButton = document.getElementById("continueButton");
+const errorText = document.getElementById("errorText");
+
+const otpOverlay = document.getElementById("otpOverlay");
+const displayMobile = document.getElementById("displayMobile");
+const otpInput = document.getElementById("otpInput");
+const verifyButton = document.getElementById("verifyButton");
+const closeOtpButton = document.getElementById("closeOtpButton");
+
+const skipButton = document.getElementById("skipButton");
+const termsLink = document.getElementById("termsLink");
+const privacyLink = document.getElementById("privacyLink");
+
+
+/* Allow only numbers */
+
+mobileInput.addEventListener("input", function(){
+
+  this.value = this.value.replace(/\D/g, "").slice(0, 10);
+
+  const mobile = this.value;
+  const isValid = /^[6-9]\d{9}$/.test(mobile);
+
+  if(mobile.length === 0){
+
+    errorText.textContent = "";
+
+  }else if(mobile.length === 10 && !isValid){
+
+    errorText.textContent =
+      "Please enter a valid Indian mobile number.";
+
+  }else{
+
+    errorText.textContent = "";
+
+  }
+
+  continueButton.disabled = !isValid;
+  continueButton.classList.toggle("enabled", isValid);
+
+});
+
+
+/* Open OTP popup */
+
+continueButton.addEventListener("click", function(){
+
+  const mobile = mobileInput.value.trim();
+
+  if(!/^[6-9]\d{9}$/.test(mobile)){
+    return;
+  }
+
+  displayMobile.textContent = "+91 " + mobile;
+
+  otpOverlay.classList.add("show");
+
+  setTimeout(() => {
+    otpInput.focus();
+  }, 320);
+
+});
+
+
+/* OTP numbers only */
+
+otpInput.addEventListener("input", function(){
+
+  this.value = this.value.replace(/\D/g, "").slice(0, 6);
+
+});
+
+
+/* Verify OTP */
+
+verifyButton.addEventListener("click", function(){
+
+  const otp = otpInput.value.trim();
+
+  if(otp.length !== 6){
+
+    alert("Please enter the complete 6-digit OTP.");
+    return;
+
+  }
+
+  /*
+    Add Firebase OTP verification here later.
+
+    Example:
+
+    confirmationResult.confirm(otp)
+      .then(function(result){
+        console.log(result.user);
+      })
+      .catch(function(error){
+        console.error(error);
+      });
+  */
+
+  alert("Mobile number verified successfully.");
+
+  otpOverlay.classList.remove("show");
+
+});
+
+
+/* Close OTP popup */
+
+function closeOtpPopup(){
+
+  otpOverlay.classList.remove("show");
+  otpInput.value = "";
+
+}
+
+closeOtpButton.addEventListener("click", closeOtpPopup);
+
+otpOverlay.addEventListener("click", function(event){
+
+  if(event.target === otpOverlay){
+    closeOtpPopup();
+  }
+
+});
+
+
+/* Skip login */
+
+skipButton.addEventListener("click", function(){
+
+  /*
+    Replace this with your home page function.
+
+    Example:
+    window.location.href = "home.html";
+  */
+
+  console.log("Login skipped");
+
+});
+
+
+/* Terms and privacy */
+
+termsLink.addEventListener("click", function(event){
+
+  event.preventDefault();
+
+  /*
+    Open your Terms popup here.
+  */
+
+  alert("Terms of Service");
+
+});
+
+privacyLink.addEventListener("click", function(event){
+
+  event.preventDefault();
+
+  /*
+    Open your Privacy Policy popup here.
+  */
+
+  alert("Privacy Policy");
+
+});
+
+
+/* Pause animations when app is hidden */
+
+document.addEventListener("visibilitychange", function(){
+
+  const tracks = document.querySelectorAll(".marquee-track");
+
+  tracks.forEach(function(track){
+
+    track.style.animationPlayState =
+      document.hidden ? "paused" : "running";
+
+  });
+
+});
+
+</script>
+
+</body>
+</html>
