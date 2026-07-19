@@ -5,98 +5,83 @@
 const scurbServiceQuantities = {};
 
 
-/* ALL PLUS BUTTONS */
-
-document
-  .querySelectorAll(".scurbServiceAddBtn")
-  .forEach(function(addButton){
-
-    addButton.addEventListener("click", function(event){
-
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-
-      const serviceCard =
-        this.closest(".scurbServiceCard");
-
-      if(!serviceCard){
-        return;
-      }
-
-      const serviceId = serviceCard.id;
-
-      if(!scurbServiceQuantities[serviceId]){
-        scurbServiceQuantities[serviceId] = 1;
-      }
-
-      renderScurbServiceQuantity(
-        this,
-        serviceId
-      );
-
-    });
-
-  });
-
-
-/* RENDER − QUANTITY + */
+/* =========================================
+   RENDER SERVICE QUANTITY
+========================================= */
 
 function renderScurbServiceQuantity(addButton, serviceId){
 
-    const qty = scurbServiceQuantities[serviceId] || 0;
+  const quantity =
+    scurbServiceQuantities[serviceId] || 0;
 
-    if(qty <= 0){
+  /* Return to original small + */
 
-        addButton.classList.remove("scurbQtyMode");
+  if(quantity <= 0){
 
-        addButton.innerHTML = `<span class="scurbSinglePlus">+</span>`;
+    scurbServiceQuantities[serviceId] = 0;
 
-        addButton.onclick = function(e){
-            e.stopPropagation();
-            scurbServiceQuantities[serviceId] = 1;
-            renderScurbServiceQuantity(addButton, serviceId);
-        };
-
-        return;
-    }
-
-    addButton.classList.add("scurbQtyMode");
+    addButton.classList.remove("scurbQtyMode");
 
     addButton.innerHTML = `
-        <button class="scurbServiceMinus">−</button>
-        <span class="scurbServiceQty">${qty}</span>
-        <button class="scurbServicePlus">+</button>
+      <span class="scurbSinglePlus">+</span>
     `;
 
-    addButton.querySelector(".scurbServiceMinus").onclick=function(e){
+    return;
+  }
 
-        e.preventDefault();
-        e.stopPropagation();
 
-        scurbServiceQuantities[serviceId]--;
+  /* Show − quantity + */
 
-        renderScurbServiceQuantity(addButton,serviceId);
+  addButton.classList.add("scurbQtyMode");
 
-    };
+  addButton.innerHTML = `
+    <span
+      class="scurbServiceMinus"
+      role="button"
+      aria-label="Decrease quantity"
+    >
+      −
+    </span>
 
-    addButton.querySelector(".scurbServicePlus").onclick=function(e){
+    <span class="scurbServiceQty">
+      ${quantity}
+    </span>
 
-        e.preventDefault();
-        e.stopPropagation();
-
-        scurbServiceQuantities[serviceId]++;
-
-        renderScurbServiceQuantity(addButton,serviceId);
-
-    };
-
+    <span
+      class="scurbServicePlus"
+      role="button"
+      aria-label="Increase quantity"
+    >
+      +
+    </span>
+  `;
 }
 
 
-/* MINUS AND PLUS EVENT DELEGATION */
+/* =========================================
+   SINGLE CLICK HANDLER
+========================================= */
 
 document.addEventListener("click", function(event){
+
+  const addButton =
+    event.target.closest(".scurbServiceAddBtn");
+
+  if(!addButton){
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const serviceCard =
+    addButton.closest(".scurbServiceCard");
+
+  if(!serviceCard){
+    return;
+  }
+
+  const serviceId = serviceCard.id;
 
   const minusButton =
     event.target.closest(".scurbServiceMinus");
@@ -105,25 +90,9 @@ document.addEventListener("click", function(event){
     event.target.closest(".scurbServicePlus");
 
 
-  /* MINUS */
+  /* Expanded minus */
 
   if(minusButton){
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    const addButton =
-      minusButton.closest(".scurbServiceAddBtn");
-
-    const serviceCard =
-      minusButton.closest(".scurbServiceCard");
-
-    if(!addButton || !serviceCard){
-      return;
-    }
-
-    const serviceId = serviceCard.id;
 
     scurbServiceQuantities[serviceId] =
       Math.max(
@@ -140,25 +109,9 @@ document.addEventListener("click", function(event){
   }
 
 
-  /* PLUS */
+  /* Expanded plus */
 
   if(plusButton){
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    const addButton =
-      plusButton.closest(".scurbServiceAddBtn");
-
-    const serviceCard =
-      plusButton.closest(".scurbServiceCard");
-
-    if(!addButton || !serviceCard){
-      return;
-    }
-
-    const serviceId = serviceCard.id;
 
     scurbServiceQuantities[serviceId] =
       (scurbServiceQuantities[serviceId] || 0) + 1;
@@ -168,6 +121,20 @@ document.addEventListener("click", function(event){
       serviceId
     );
 
+    return;
+  }
+
+
+  /* Initial small plus */
+
+  if(!addButton.classList.contains("scurbQtyMode")){
+
+    scurbServiceQuantities[serviceId] = 1;
+
+    renderScurbServiceQuantity(
+      addButton,
+      serviceId
+    );
   }
 
 });
