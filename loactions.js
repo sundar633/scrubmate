@@ -11,7 +11,27 @@ const currentLocationButton =
 const manualLocationButton =
   document.getElementById("manualLocationButton");
 
+/* =========================
+   IOS NATIVE LOCATION BRIDGE
+========================= */
 
+let scrubMateLocationRequestType = null;
+
+function isScrubMateIOSApp() {
+  return Boolean(
+    window.webkit &&
+    window.webkit.messageHandlers &&
+    window.webkit.messageHandlers.requestScrubMateLocation
+  );
+}
+
+function requestScrubMateNativeLocation(requestType) {
+  scrubMateLocationRequestType = requestType;
+
+  window.webkit.messageHandlers.requestScrubMateLocation.postMessage({
+    type: requestType
+  });
+}
 skipButton.addEventListener("click", function(){
 
   stopMarquee();
@@ -31,89 +51,87 @@ currentLocationButton.addEventListener(
 /* =========================
    SAVE CURRENT LOCATION
 ========================= */
-
-async function getAndSaveCurrentLocation(){
-
-  if(!navigator.geolocation){
-    console.error("Geolocation is not supported.");
-    return;
-  }
+async function getAndSaveCurrentLocation() {
 
   currentLocationButton.disabled = true;
 
+  // Inside the iOS app, request location from native Swift code
+  if (isScrubMateIOSApp()) {
+    requestScrubMateNativeLocation("saveCurrentLocation");
+    return;
+  }
+
+  // Normal browser fallback
+  if (!navigator.geolocation) {
+    console.error("Geolocation is not supported.");
+    currentLocationButton.disabled = false;
+    return;
+  }
+
   navigator.geolocation.getCurrentPosition(
-
-    async function(position){
-
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      try{
-
-        const locationData =
-          await reverseGeocode(latitude, longitude);
-
-        saveLocationToStorage({
-          ...locationData,
-          latitude,
-          longitude,
-          accuracy:position.coords.accuracy ?? null,
-          locationType:"current"
-        });
-
-        console.log("Current location saved.");
-        updateScurbHomeLocation();
-openScurbHomePage();
-
-      }catch(error){
-
-        saveLocationToStorage({
-          latitude,
-          longitude,
-          accuracy:position.coords.accuracy ?? null,
-          fullAddress:"",
-          locationType:"current",
-          addressFound:false
-        });
-
-        console.error(
-          "Coordinates saved, but address failed:",
-          error
-        );
-
-      }finally{
-
-        currentLocationButton.disabled = false;
-
-      }
-
+    async function(position) {
+      await saveCurrentCoordinates(
+        position.coords.latitude,
+        position.coords.longitude,
+        position.coords.accuracy ?? null
+      );
     },
 
-    function(error){
-
+    function(error) {
       currentLocationButton.disabled = false;
-
-      if(error.code === error.PERMISSION_DENIED){
-
-        localStorage.setItem(
-          "scurbMateLocationPermission",
-          "denied"
-        );
-
-      }
-
-      console.error("Location error:", error);
-
+      handleBrowserLocationError(error);
     },
 
     {
-      enableHighAccuracy:true,
-      timeout:20000,
-      maximumAge:0
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
     }
-
   );
+}
+async function saveCurrentCoordinates(
+  latitude,
+  longitude,
+  accuracy
+) {
+  try {
+    const locationData =
+      await reverseGeocode(latitude, longitude);
 
+    saveLocationToStorage({
+      ...locationData,
+      latitude,
+      longitude,
+      accuracy: accuracy ?? null,
+      locationType: "current"
+    });
+
+    console.log("Current location saved.");
+
+    updateScurbHomeLocation();
+    openScurbHomePage();
+
+  } catch (error) {
+    saveLocationToStorage({
+      latitude,
+      longitude,
+      accuracy: accuracy ?? null,
+      fullAddress: "",
+      locationType: "current",
+      addressFound: false
+    });
+
+    console.error(
+      "Coordinates saved, but address failed:",
+      error
+    );
+
+    updateScurbHomeLocation();
+    openScurbHomePage();
+
+  } finally {
+    currentLocationButton.disabled = false;
+  }
 }
 
 
@@ -532,46 +550,121 @@ goCurrentLocationButton.addEventListener(
 );
 
 
-function openDeviceLocationOnMap(){
+function openDeviceLocationOnMap() {
 
-  if(!navigator.geolocation){
+  // Inside iOS app, request native location
+  if (isScrubMateIOSApp()) {
+    requestScrubMateNativeLocation("openLocationOnMap");
+    return;
+  }
 
+  // Normal browser fallback
+  if (!navigator.geolocation) {
     console.error("Geolocation is not supported.");
     return;
-
   }
 
   navigator.geolocation.getCurrentPosition(
-
-    function(position){
-
+    function(position) {
       openConfirmLocation(
         position.coords.latitude,
         position.coords.longitude
       );
-
     },
 
-    function(error){
-
-      console.error(
-        "Unable to access current location:",
-        error
-      );
-
+    function(error) {
+      handleBrowserLocationError(error);
     },
 
     {
-      enableHighAccuracy:true,
-      timeout:20000,
-      maximumAge:0
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0
     }
-
   );
-
 }
 
+window.onScrubMateLocationReceived =
+  async function(location) {
 
+    const latitude = Number(location.latitude);
+    const longitude = Number(location.longitude);
+    const accuracy =
+      location.accuracy !== undefined
+        ? Number(location.accuracy)
+        : null;
+
+    if (
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude)
+    ) {
+      console.error(
+        "Invalid native location received:",
+        location
+      );
+
+      currentLocationButton.disabled = false;
+      return;
+    }
+
+    console.log(
+      "Native iOS location received:",
+      latitude,
+      longitude,
+      accuracy
+    );
+
+    if (
+      scrubMateLocationRequestType ===
+      "openLocationOnMap"
+    ) {
+      openConfirmLocation(latitude, longitude);
+    } else {
+      await saveCurrentCoordinates(
+        latitude,
+        longitude,
+        accuracy
+      );
+    }
+
+    scrubMateLocationRequestType = null;
+  };
+  window.onScrubMateLocationError =
+  function(errorData) {
+
+    currentLocationButton.disabled = false;
+    scrubMateLocationRequestType = null;
+
+    const code = errorData?.code || "unknown";
+    const message =
+      errorData?.message ||
+      "Unable to access your current location.";
+
+    if (code === "denied") {
+      localStorage.setItem(
+        "scurbMateLocationPermission",
+        "denied"
+      );
+    }
+
+    console.error(
+      "Native iOS location error:",
+      code,
+      message
+    );
+  };
+
+  function handleBrowserLocationError(error) {
+
+  if (error.code === error.PERMISSION_DENIED) {
+    localStorage.setItem(
+      "scurbMateLocationPermission",
+      "denied"
+    );
+  }
+
+  console.error("Location error:", error);
+}
 /* =========================
    CONFIRM AND SAVE SILENTLY
 ========================= */
