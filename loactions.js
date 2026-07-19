@@ -62,6 +62,8 @@ async function getAndSaveCurrentLocation(){
         });
 
         console.log("Current location saved.");
+        updateScurbHomeLocation();
+openScurbHomePage();
 
       }catch(error){
 
@@ -356,7 +358,7 @@ async function openConfirmLocation(latitude, longitude){
 
   manualSearchPage.classList.remove("show");
   confirmLocationPage.classList.add("show");
-
+confirmManualLocationButton.disabled = true;
   selectedLocationName.textContent = "Finding location...";
   selectedLocationAddress.textContent = "";
   mapPinPlaceName.textContent = "Selected location";
@@ -393,7 +395,7 @@ function createOrMoveMap(latitude, longitude){
 
 
     manualLocationMap.on("move", function(){
-
+confirmManualLocationButton.disabled = true;
       selectedLocationName.textContent =
         "Move map to select location";
 
@@ -486,7 +488,7 @@ async function updateMapAddress(latitude, longitude){
     selectedLocationAddress.textContent =
       locationData.fullAddress ||
       "Selected map location";
-
+confirmManualLocationButton.disabled = false;
   }catch(error){
 
     console.error("Reverse location failed:", error);
@@ -509,7 +511,7 @@ async function updateMapAddress(latitude, longitude){
       latitude.toFixed(6) +
       ", " +
       longitude.toFixed(6);
-
+confirmManualLocationButton.disabled = true;
   }
 
 }
@@ -598,11 +600,7 @@ confirmManualLocationButton.addEventListener(
       finalLocation
     );
 
-    /*
-      No alert or success popup.
-
-      Add your next page opening code here later.
-    */
+    openScurbHomePage();
 
   }
 );
