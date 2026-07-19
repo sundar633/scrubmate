@@ -16,6 +16,46 @@ const manualLocationButton =
 ========================= */
 
 let scrubMateLocationRequestType = null;
+let currentLocationButtonOriginalHTML = "";
+
+function showCurrentLocationSpinner() {
+  if (!currentLocationButton) return;
+
+  if (!currentLocationButtonOriginalHTML) {
+    currentLocationButtonOriginalHTML =
+      currentLocationButton.innerHTML;
+  }
+
+  currentLocationButton.disabled = true;
+
+  currentLocationButton.innerHTML = `
+    <span class="scrub-location-spinner" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-dasharray="42 16"
+        ></circle>
+      </svg>
+    </span>
+  `;
+}
+
+function hideCurrentLocationSpinner() {
+  if (!currentLocationButton) return;
+
+  currentLocationButton.disabled = false;
+
+  if (currentLocationButtonOriginalHTML) {
+    currentLocationButton.innerHTML =
+      currentLocationButtonOriginalHTML;
+  }
+}
 
 function isScrubMateIOSApp() {
   return Boolean(
@@ -51,20 +91,27 @@ currentLocationButton.addEventListener(
 /* =========================
    SAVE CURRENT LOCATION
 ========================= */
+
+
 async function getAndSaveCurrentLocation() {
 
-  currentLocationButton.disabled = true;
+  showCurrentLocationSpinner();
 
-  // Inside the iOS app, request location from native Swift code
+  // iOS native app
   if (isScrubMateIOSApp()) {
-    requestScrubMateNativeLocation("saveCurrentLocation");
+    requestScrubMateNativeLocation(
+      "saveCurrentLocation"
+    );
     return;
   }
 
   // Normal browser fallback
   if (!navigator.geolocation) {
-    console.error("Geolocation is not supported.");
-    currentLocationButton.disabled = false;
+    console.error(
+      "Geolocation is not supported."
+    );
+
+    hideCurrentLocationSpinner();
     return;
   }
 
@@ -78,7 +125,7 @@ async function getAndSaveCurrentLocation() {
     },
 
     function(error) {
-      currentLocationButton.disabled = false;
+      hideCurrentLocationSpinner();
       handleBrowserLocationError(error);
     },
 
@@ -130,11 +177,9 @@ async function saveCurrentCoordinates(
     openScurbHomePage();
 
   } finally {
-    currentLocationButton.disabled = false;
+    hideCurrentLocationSpinner();
   }
 }
-
-
 /* =========================
    MANUAL LOCATION ELEMENTS
 ========================= */
@@ -584,11 +629,16 @@ function openDeviceLocationOnMap() {
   );
 }
 
-window.onScrubMateLocationReceived =
-  async function(location) {
 
-    const latitude = Number(location.latitude);
-    const longitude = Number(location.longitude);
+window.onScrubMateLocationReceived =
+  function(location) {
+
+    const latitude =
+      Number(location.latitude);
+
+    const longitude =
+      Number(location.longitude);
+
     const accuracy =
       location.accuracy !== undefined
         ? Number(location.accuracy)
@@ -603,8 +653,10 @@ window.onScrubMateLocationReceived =
         location
       );
 
-      currentLocationButton.disabled = false;
-      return;
+      hideCurrentLocationSpinner();
+      scrubMateLocationRequestType = null;
+
+      return null;
     }
 
     console.log(
@@ -614,28 +666,48 @@ window.onScrubMateLocationReceived =
       accuracy
     );
 
-    if (
-      scrubMateLocationRequestType ===
-      "openLocationOnMap"
-    ) {
-      openConfirmLocation(latitude, longitude);
-    } else {
+    const requestedType =
+      scrubMateLocationRequestType;
+
+    scrubMateLocationRequestType = null;
+
+    // Run async work internally without returning Promise to Swift
+    void (async function() {
+
+      if (
+        requestedType ===
+        "openLocationOnMap"
+      ) {
+        openConfirmLocation(
+          latitude,
+          longitude
+        );
+
+        return;
+      }
+
       await saveCurrentCoordinates(
         latitude,
         longitude,
         accuracy
       );
-    }
 
-    scrubMateLocationRequestType = null;
+    })();
+
+    // Swift receives a supported return value
+    return null;
   };
-  window.onScrubMateLocationError =
+
+ window.onScrubMateLocationError =
   function(errorData) {
 
-    currentLocationButton.disabled = false;
+    hideCurrentLocationSpinner();
+
     scrubMateLocationRequestType = null;
 
-    const code = errorData?.code || "unknown";
+    const code =
+      errorData?.code || "unknown";
+
     const message =
       errorData?.message ||
       "Unable to access your current location.";
@@ -652,8 +724,9 @@ window.onScrubMateLocationReceived =
       code,
       message
     );
-  };
 
+    return null;
+  };
   function handleBrowserLocationError(error) {
 
   if (error.code === error.PERMISSION_DENIED) {
