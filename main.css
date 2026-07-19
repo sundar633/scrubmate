@@ -1,0 +1,244 @@
+/* =========================================
+   SCURB MATE MAIN HOME PAGE
+========================================= */
+
+.scurb-home-page{
+  position:fixed;
+  inset:0;
+  z-index:7000;
+
+  width:min(100%, var(--page-width));
+  height:100%;
+  margin:auto;
+
+  display:none;
+  flex-direction:column;
+
+  background:#ffffff;
+  overflow:hidden;
+}
+
+.scurb-home-page.show{
+  display:flex;
+}
+
+
+/* =========================================
+   TOP LOCATION HEADER
+========================================= */
+
+.scurb-home-header{
+  position:relative;
+  z-index:10;
+  flex:none;
+
+  min-height:calc(138px + env(safe-area-inset-top, 0px));
+
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 30px)
+    24px
+    22px;
+
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+
+  background:var(--primary);
+  color:#ffffff;
+}
+
+.scurb-header-location{
+  flex:1;
+  min-width:0;
+
+  padding:0;
+  border:none;
+  background:transparent;
+  color:#ffffff;
+
+  text-align:left;
+  cursor:pointer;
+}
+
+.scurb-location-title-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  min-width:0;
+}
+
+.scurb-location-title-row strong{
+  min-width:0;
+
+  color:#ffffff;
+  font-size:25px;
+  font-weight:800;
+  line-height:1.2;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.scurb-location-title-row i{
+  flex:none;
+
+  color:#ffffff;
+  font-size:17px;
+}
+
+.scurb-header-location p{
+  max-width:100%;
+  margin-top:7px;
+
+  color:rgba(255,255,255,.95);
+  font-size:16px;
+  font-weight:600;
+  line-height:1.3;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+
+/* PROFILE BUTTON */
+
+.scurb-profile-button{
+  flex:none;
+
+  width:58px;
+  height:58px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0;
+  border:none;
+  border-radius:50%;
+
+  background:#ffffff;
+  color:#171717;
+
+  cursor:pointer;
+}
+
+.scurb-profile-button i{
+  font-size:25px;
+  line-height:1;
+}
+
+
+/* =========================================
+   EMPTY MIDDLE CONTENT
+========================================= */
+
+.scurb-home-content{
+  flex:1;
+  min-height:0;
+
+  background:#ffffff;
+
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+========================================= */
+
+.scurb-bottom-navigation{
+  position:relative;
+  z-index:10;
+  flex:none;
+
+  min-height:calc(88px + env(safe-area-inset-bottom, 0px));
+
+  padding:
+    12px
+    20px
+    calc(env(safe-area-inset-bottom, 0px) + 12px);
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+
+  border-top:1px solid #eeeeee;
+  background:#ffffff;
+
+  box-shadow:0 -6px 20px rgba(0,0,0,.05);
+}
+
+.scurb-nav-button{
+  height:64px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+
+  padding:0 16px;
+
+  border:none;
+  border-radius:22px;
+
+  background:transparent;
+  color:#666666;
+
+  font-size:18px;
+  font-weight:700;
+
+  cursor:pointer;
+}
+
+.scurb-nav-button i{
+  font-size:23px;
+  line-height:1;
+}
+
+.scurb-nav-button.active{
+  background:rgba(20,185,187,.12);
+  color:var(--primary);
+}
+
+.scurb-nav-button:active{
+  transform:scale(.98);
+}
+
+
+/* SMALL MOBILE */
+
+@media (max-width:420px){
+
+  .scurb-home-header{
+    min-height:calc(128px + env(safe-area-inset-top, 0px));
+
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 25px)
+      20px
+      20px;
+  }
+
+  .scurb-location-title-row strong{
+    font-size:22px;
+  }
+
+  .scurb-header-location p{
+    font-size:14px;
+  }
+
+  .scurb-profile-button{
+    width:54px;
+    height:54px;
+  }
+
+  .scurb-nav-button{
+    height:60px;
+    font-size:17px;
+  }
+}
