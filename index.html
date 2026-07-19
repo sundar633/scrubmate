@@ -13,6 +13,7 @@
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -651,7 +652,7 @@ input{
 </style>
     <link rel="stylesheet" href="loaction.css">
 
-
+  <link rel="stylesheet" href="main.css">
 
 
 
@@ -1204,8 +1205,8 @@ input{
     <div class="selected-location-details">
 
       <div class="selected-location-icon">
-        <span></span>
-      </div>
+    <i class="fa-solid fa-location-dot"></i>
+</div>
 
       <div class="selected-location-text">
 
@@ -1234,7 +1235,92 @@ input{
 
 </section>
 
+<!-- =========================
+     MAIN HOME PAGE
+========================== -->
 
+<section class="scurb-home-page" id="scurbHomePage">
+
+  <!-- TOP LOCATION HEADER -->
+
+  <header class="scurb-home-header">
+
+    <button
+      type="button"
+      class="scurb-header-location"
+      id="scurbHeaderLocation"
+    >
+
+      <div class="scurb-location-title-row">
+
+        <strong id="scurbHomeLocationName">
+          Selected location
+        </strong>
+
+        <i class="fa-solid fa-chevron-down"></i>
+
+      </div>
+
+      <p id="scurbHomeAddress">
+        Your selected address
+      </p>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="scurb-profile-button"
+      id="scurbProfileButton"
+      aria-label="Open profile"
+    >
+      <i class="fa-solid fa-user"></i>
+    </button>
+
+  </header>
+
+
+  <!-- EMPTY MIDDLE CONTENT -->
+
+  <main class="scurb-home-content" id="scurbHomeContent">
+
+    <!-- We will add the main content here later -->
+
+  </main>
+
+
+  <!-- BOTTOM NAVIGATION -->
+
+  <nav class="scurb-bottom-navigation">
+
+    <button
+      type="button"
+      class="scurb-nav-button active"
+      id="scurbHomeNavButton"
+    >
+
+      <i class="fa-solid fa-house"></i>
+
+      <span>Home</span>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="scurb-nav-button"
+      id="scurbBookingsNavButton"
+    >
+
+      <i class="fa-regular fa-clipboard"></i>
+
+      <span>Bookings</span>
+
+    </button>
+
+  </nav>
+
+</section>
 <!-- =========================
      OTP POPUP
 ========================== -->
@@ -1280,7 +1366,7 @@ input{
   </div>
 
 </div>
-
+<script src="main.js"></script>
 <script src="loactions.js"></script>
 <script
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
