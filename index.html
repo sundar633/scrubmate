@@ -9,7 +9,10 @@
 >
 
 <title>Scurb Mate - Login</title>
-
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -362,7 +365,7 @@ input{
   margin-bottom:25px;
 
   text-align:center;
-  font-size:24px;
+  font-size:32px;
   font-weight:700;
   line-height:1.1;
   letter-spacing:0;
@@ -646,6 +649,7 @@ input{
 }
 
 </style>
+    <link rel="stylesheet" href="loaction.css">
 
 
 
@@ -656,7 +660,7 @@ input{
 
 <body>
 
-<main class="app">
+<main class="app" id="loginPage">
 
   <!-- =========================
        TOP SECTION
@@ -962,14 +966,273 @@ input{
 
    <div class="terms">
   <span>By continuing, you agree to our</span>
-  <a href="#">Terms of Service</a>
+
+  <a href="#" id="termsLink">
+    Terms of Service
+  </a>
+
   <span>&</span>
-  <a href="#">Privacy Policy</a>
+
+  <a href="#" id="privacyLink">
+    Privacy Policy
+  </a>
 </div>
 
   </section>
 
 </main>
+
+<!-- =========================
+     LOCATION PAGE
+========================== -->
+
+<section class="location-page" id="locationPage">
+
+  <div class="location-header">
+
+    <h1 class="location-title">
+      What’s your location?
+    </h1>
+
+    <p class="location-subtitle">
+      We need your location to show you our serviceable hubs.
+    </p>
+
+  </div>
+
+
+  <div class="location-image-wrap">
+
+    <img
+      src="images/loactions.png"
+      class="location-image"
+      alt="Service location map"
+    >
+
+  </div>
+
+
+  <div class="location-actions">
+
+    <button
+      type="button"
+      class="current-location-button"
+      id="currentLocationButton"
+    >
+
+      <span class="location-target-icon">
+        <span></span>
+      </span>
+
+      <span>Use current location</span>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="manual-location-button"
+      id="manualLocationButton"
+    >
+      Enter location manually
+    </button>
+
+  </div>
+
+</section>
+<!-- =========================
+     MANUAL LOCATION SEARCH PAGE
+========================== -->
+
+<section class="manual-search-page" id="manualSearchPage">
+
+  <header class="manual-search-header">
+
+    <button
+      type="button"
+      class="location-back-button"
+      id="manualSearchBackButton"
+      aria-label="Go back"
+    >
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+
+    <h1>Search your location</h1>
+
+  </header>
+
+
+  <div class="manual-search-content">
+
+    <div class="location-search-box">
+
+      <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-4-4"></path>
+      </svg>
+
+      <input
+        type="search"
+        id="manualLocationSearchInput"
+        placeholder="Search locality, sector, area"
+        autocomplete="off"
+      >
+
+    </div>
+
+
+    <button
+      type="button"
+      class="manual-current-location-row"
+      id="manualCurrentLocationButton"
+    >
+
+      <svg class="manual-target-svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="7"></circle>
+        <circle cx="12" cy="12" r="2.4" fill="currentColor"></circle>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+      </svg>
+
+      <span>Use current location</span>
+
+      <svg class="manual-arrow-svg" viewBox="0 0 24 24">
+        <path d="M9 6l6 6-6 6"></path>
+      </svg>
+
+    </button>
+
+
+    <p class="saved-address-title">
+      SAVED ADDRESSES
+    </p>
+
+    <div
+      class="location-search-results"
+      id="locationSearchResults"
+    ></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     CONFIRM LOCATION MAP PAGE
+========================== -->
+
+<section class="confirm-location-page" id="confirmLocationPage">
+
+  <header class="confirm-location-header">
+
+    <button
+      type="button"
+      class="location-back-button"
+      id="confirmLocationBackButton"
+      aria-label="Go back"
+    >
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+
+    <h1>Confirm your location</h1>
+
+  </header>
+
+
+  <div class="confirm-search-holder">
+
+    <button
+      type="button"
+      class="confirm-search-box"
+      id="confirmSearchButton"
+    >
+
+      <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-4-4"></path>
+      </svg>
+
+      <span>Search locality, sector, area</span>
+
+    </button>
+
+  </div>
+
+
+  <div class="location-map-wrapper">
+
+    <div id="manualLocationMap"></div>
+
+    <div class="fixed-map-pin">
+
+      <div class="map-pin-message">
+        <span>Set this as your location</span>
+        <strong id="mapPinPlaceName">Selected location</strong>
+      </div>
+
+      <div class="map-pin-icon">
+        <span></span>
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="go-current-location-button"
+      id="goCurrentLocationButton"
+    >
+
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="7"></circle>
+        <circle cx="12" cy="12" r="2.4" fill="currentColor"></circle>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path>
+      </svg>
+
+      <span>Go to current location</span>
+
+    </button>
+
+  </div>
+
+
+  <div class="confirm-location-bottom">
+
+    <div class="selected-location-details">
+
+      <div class="selected-location-icon">
+        <span></span>
+      </div>
+
+      <div class="selected-location-text">
+
+        <strong id="selectedLocationName">
+          Select location
+        </strong>
+
+        <p id="selectedLocationAddress">
+          Move the map to choose your exact location
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="confirm-location-button"
+      id="confirmManualLocationButton"
+    >
+      Confirm location
+    </button>
+
+  </div>
+
+</section>
 
 
 <!-- =========================
@@ -1018,7 +1281,11 @@ input{
 
 </div>
 
-
+<script src="loactions.js"></script>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  defer
+></script>
 <script>
 
 const mobileInput = document.getElementById("mobileInput");
@@ -1150,61 +1417,64 @@ otpOverlay.addEventListener("click", function(event){
 });
 
 
-/* Skip login */
-
-skipButton.addEventListener("click", function(){
-
-  /*
-    Replace this with your home page function.
-
-    Example:
-    window.location.href = "home.html";
-  */
-
-  console.log("Login skipped");
-
-});
 
 
-/* Terms and privacy */
 
-termsLink.addEventListener("click", function(event){
-
-  event.preventDefault();
-
-  /*
-    Open your Terms popup here.
-  */
-
-  alert("Terms of Service");
-
-});
-
-privacyLink.addEventListener("click", function(event){
-
-  event.preventDefault();
-
-  /*
-    Open your Privacy Policy popup here.
-  */
-
-  alert("Privacy Policy");
-
-});
 
 
 /* Pause animations when app is hidden */
+/* Run image animation only when this page is visible */
 
+const marqueeTracks = document.querySelectorAll(".marquee-track");
+
+function startMarquee(){
+  marqueeTracks.forEach(function(track){
+    track.style.animationPlayState = "running";
+  });
+}
+
+function stopMarquee(){
+  marqueeTracks.forEach(function(track){
+    track.style.animationPlayState = "paused";
+  });
+}
+
+/* App minimized or browser tab changed */
 document.addEventListener("visibilitychange", function(){
 
-  const tracks = document.querySelectorAll(".marquee-track");
+  if(document.hidden){
+    stopMarquee();
+  }else{
+    startMarquee();
+  }
 
-  tracks.forEach(function(track){
+});
 
-    track.style.animationPlayState =
-      document.hidden ? "paused" : "running";
+/* User leaves this page */
+window.addEventListener("pagehide", function(){
+  stopMarquee();
+});
 
-  });
+/* User returns to this page */
+window.addEventListener("pageshow", function(){
+
+  if(!document.hidden){
+    startMarquee();
+  }
+
+});
+
+/* Browser/app loses focus */
+window.addEventListener("blur", function(){
+  stopMarquee();
+});
+
+/* Browser/app gets focus again */
+window.addEventListener("focus", function(){
+
+  if(!document.hidden){
+    startMarquee();
+  }
 
 });
 
