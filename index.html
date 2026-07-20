@@ -1115,7 +1115,54 @@ input{
 
 </section>
 
+<!-- =========================
+     AUTO FETCH LOCATION PAGE
+========================= -->
 
+<section class="auto-location-page" id="autoLocationPage">
+
+  <div class="auto-location-content">
+
+   <div class="auto-location-image-wrap">
+
+  <div class="autoMapCircle">
+
+    <div class="autoMapPattern"></div>
+
+    <div class="autoPin">
+      <i class="fa-solid fa-location-dot"></i>
+    </div>
+
+  </div>
+
+</div>
+
+   <div
+  class="auto-location-loading"
+  id="autoLocationLoading"
+>
+  <p>Fetching location...</p>
+</div>
+
+    <div
+      class="auto-location-result"
+      id="autoLocationResult"
+    >
+      <h2>
+        <i class="fa-solid fa-location-dot"></i>
+        <span id="autoLocationName">Your location</span>
+      </h2>
+
+      <div class="auto-location-line"></div>
+
+      <p id="autoLocationAddress">
+        Location detected successfully
+      </p>
+    </div>
+
+  </div>
+
+</section>
 <!-- =========================
      CONFIRM LOCATION MAP PAGE
 ========================== -->
@@ -2075,8 +2122,7 @@ verifyButton.addEventListener("click", function(){
   otpOverlay.classList.remove("show");
   otpInput.value = "";
 
-  document.getElementById("loginPage").style.display = "none";
-  document.getElementById("locationPage").classList.add("show");
+ startAutomaticLoginLocation();
 
 });
 
