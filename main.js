@@ -24,40 +24,85 @@ const scurbBookingsNavButton =
 function updateScurbHomeLocation(){
 
   const village =
-    localStorage.getItem("scurbMateVillage") || "";
+    localStorage.getItem("scurbMateVillage")?.trim() || "";
 
   const street =
-    localStorage.getItem("scurbMateStreetName") || "";
+    localStorage.getItem("scurbMateStreetName")?.trim() || "";
+
+  const neighbourhood =
+    localStorage.getItem("scurbMateNeighbourhood")?.trim() || "";
 
   const city =
-    localStorage.getItem("scurbMateCity") || "";
+    localStorage.getItem("scurbMateCity")?.trim() || "";
+
+  const district =
+    localStorage.getItem("scurbMateDistrict")?.trim() || "";
+
+  const state =
+    localStorage.getItem("scurbMateState")?.trim() || "";
+
+  const postcode =
+    localStorage.getItem("scurbMatePostcode")?.trim() || "";
 
   const fullAddress =
-    localStorage.getItem("scurbMateFullAddress") || "";
+    localStorage.getItem("scurbMateFullAddress")?.trim() || "";
 
 
-  scurbHomeLocationName.textContent =
+  const locationName =
     village ||
+    neighbourhood ||
     street ||
     city ||
     "Selected location";
 
+  scurbHomeLocationName.textContent =
+    cleanScurbLocationText(locationName);
 
- const address =
-  fullAddress ||
-  [street, village, city]
-    .filter(Boolean)
-    .join(", ") ||
-  "Your selected address";
 
-const words = address.trim().split(/\s+/);
+  const addressParts = [
+    street,
+    neighbourhood,
+    village,
+    city,
+    district,
+    state,
+    postcode
+  ].filter(function(value){
 
-scurbHomeAddress.textContent =
-  words.length > 2
-    ? words.slice(0, 2).join(" ") + "..."
-    : address;
+    const cleanValue =
+      cleanScurbLocationText(value);
+
+    return cleanValue !== "";
+
+  });
+
+
+  const address =
+    addressParts.length
+      ? addressParts.join(", ")
+      : cleanScurbLocationText(fullAddress) ||
+        "Your selected address";
+
+
+  const words =
+    address.trim().split(/\s+/);
+
+  scurbHomeAddress.textContent =
+    words.length > 4
+      ? words.slice(0, 4).join(" ") + "..."
+      : address;
 }
+function cleanScurbLocationText(value){
 
+  return String(value || "")
+    .replace(/\s*---+\s*/g, " ")
+    .replace(/\s*--+\s*/g, " ")
+    .replace(/\s+-\s+/g, ", ")
+    .replace(/,\s*,+/g, ", ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[-,\s]+|[-,\s]+$/g, "")
+    .trim();
+}
 
 function openScurbHomePage(){
 
@@ -306,3 +351,33 @@ requestAnimationFrame(function(){
   });
 
 });
+
+function openHomeWithSlideUp(){
+
+  const scurbHomePage =
+    document.getElementById("scurbHomePage");
+
+  autoLocationPage.classList.remove("show");
+
+  updateScurbHomeLocation();
+
+  scurbHomePage.classList.remove(
+    "show",
+    "home-slide-up"
+  );
+
+  void scurbHomePage.offsetWidth;
+
+  scurbHomePage.classList.add(
+    "show",
+    "home-slide-up"
+  );
+
+  setTimeout(function(){
+
+    scurbHomePage.classList.remove(
+      "home-slide-up"
+    );
+
+  }, 500);
+}
