@@ -1335,7 +1335,7 @@ input{
 <section class="scurbServicesSection">
 
     <h2 class="scurbServicesTitle">
-        Serices we offer
+        Serices We Offer
     </h2>
 
 </section>
@@ -1832,9 +1832,39 @@ input{
   </div>
 
 </div>
+<section class="scurbTrustSection">
+  <h2>Safe &amp; Secure</h2>
+  <p>Trusted service with verified staff.</p>
+</section>
 
 
+<section class="scurbFeaturesSection">
 
+  <div class="scurbFeaturesScroll">
+
+    <div class="scurbFeatureItem">
+      <img src="main/1.png" alt="">
+      <p>Verified professionals you can trust for every cleaning service.</p>
+    </div>
+
+    <div class="scurbFeatureItem">
+      <img src="main/2.png" alt="">
+      <p>Quick booking and reliable support whenever you need help.</p>
+    </div>
+
+    <div class="scurbFeatureItem">
+      <img src="main/3.png" alt="">
+      <p>Quality cleaning with attention to every detail in your home.</p>
+    </div>
+
+  </div>
+
+</section>
+
+<div class="verifiedBadge">
+    <img src="main/7595571.png" alt="">
+    <span class="scrubMateText">Scrub Mate</span>
+</div>
   </main>
 
 
@@ -2001,36 +2031,55 @@ otpInput.addEventListener("input", function(){
 
 /* Verify OTP */
 
+/* Verify OTP */
+
 verifyButton.addEventListener("click", function(){
 
+  const mobile = mobileInput.value.trim();
   const otp = otpInput.value.trim();
 
+  /* Reset error style */
+  otpInput.style.borderColor = "";
+  otpInput.style.boxShadow = "";
+
   if(otp.length !== 6){
-
-    alert("Please enter the complete 6-digit OTP.");
+    otpInput.style.borderColor = "#e53935";
+    otpInput.style.boxShadow = "0 0 0 4px rgba(229,57,53,.12)";
+    otpInput.focus();
     return;
-
   }
 
-  /*
-    Add Firebase OTP verification here later.
+  /* Temporary OTP */
+  if(otp !== "123456"){
+    otpInput.style.borderColor = "#e53935";
+    otpInput.style.boxShadow = "0 0 0 4px rgba(229,57,53,.12)";
+    otpInput.focus();
+    return;
+  }
 
-    Example:
+  /* Save login */
+  const scrubMateUser = {
+    mobile: mobile,
+    phoneNumber: "+91" + mobile,
+    otp: otp,
+    login: true,
+    verified: true,
+    loginTime: new Date().toISOString()
+  };
 
-    confirmationResult.confirm(otp)
-      .then(function(result){
-        console.log(result.user);
-      })
-      .catch(function(error){
-        console.error(error);
-      });
-  */
-
-  alert("Mobile number verified successfully.");
+  localStorage.setItem("scrubMateUser", JSON.stringify(scrubMateUser));
+  localStorage.setItem("scrubMateMobile", mobile);
+  localStorage.setItem("scrubMateOtp", otp);
+  localStorage.setItem("scrubMateLoggedIn", "true");
 
   otpOverlay.classList.remove("show");
+  otpInput.value = "";
+
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("locationPage").classList.add("show");
 
 });
+
 
 
 /* Close OTP popup */
