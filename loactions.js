@@ -4,7 +4,22 @@
 
 const loginPage = document.getElementById("loginPage");
 const locationPage = document.getElementById("locationPage");
+const autoLocationPage =
+  document.getElementById("autoLocationPage");
 
+const autoLocationLoading =
+  document.getElementById("autoLocationLoading");
+
+const autoLocationResult =
+  document.getElementById("autoLocationResult");
+
+const autoLocationName =
+  document.getElementById("autoLocationName");
+
+const autoLocationAddress =
+  document.getElementById("autoLocationAddress");
+
+let isAutomaticLoginLocation = false;
 const currentLocationButton =
   document.getElementById("currentLocationButton");
 
@@ -91,7 +106,88 @@ currentLocationButton.addEventListener(
 /* =========================
    SAVE CURRENT LOCATION
 ========================= */
+/* =========================
+   AUTOMATIC LOGIN LOCATION
+========================= */
 
+function startAutomaticLoginLocation(){
+
+  isAutomaticLoginLocation = true;
+
+  stopMarquee();
+
+  loginPage.style.display = "none";
+  otpOverlay.classList.remove("show");
+
+  locationPage.classList.remove("show");
+  autoLocationPage.classList.add("show");
+
+  autoLocationLoading.style.display = "flex";
+  autoLocationResult.classList.remove("show");
+
+  autoLocationName.textContent = "Your location";
+  autoLocationAddress.textContent =
+    "Location detected successfully";
+
+  getAndSaveCurrentLocation();
+}
+
+
+function showAutomaticLocationResult(locationData){
+
+  if(!isAutomaticLoginLocation){
+    return;
+  }
+
+  const placeName =
+    locationData.village ||
+    locationData.neighbourhood ||
+    locationData.city ||
+    locationData.district ||
+    "Your location";
+
+  const address =
+    locationData.fullAddress ||
+    [
+      locationData.city,
+      locationData.district,
+      locationData.state,
+      locationData.postcode
+    ]
+    .filter(Boolean)
+    .join(", ") ||
+    "Location detected successfully";
+
+  autoLocationLoading.style.display = "none";
+
+  autoLocationName.textContent = placeName;
+  autoLocationAddress.textContent = address;
+
+  autoLocationResult.classList.add("show");
+
+  setTimeout(function(){
+
+  isAutomaticLoginLocation = false;
+
+  openHomeWithSlideUp();
+
+}, 1400);
+}
+
+
+function handleAutomaticLocationFailure(){
+
+  if(!isAutomaticLoginLocation){
+    return;
+  }
+
+  isAutomaticLoginLocation = false;
+
+  autoLocationPage.classList.remove("show");
+
+  /* Show normal location-selection page */
+  locationPage.classList.add("show");
+}
 
 async function getAndSaveCurrentLocation() {
 
@@ -141,44 +237,61 @@ async function saveCurrentCoordinates(
   longitude,
   accuracy
 ) {
+
+  let finalLocationData = null;
+
   try {
+
     const locationData =
       await reverseGeocode(latitude, longitude);
 
-    saveLocationToStorage({
+    finalLocationData = {
       ...locationData,
       latitude,
       longitude,
       accuracy: accuracy ?? null,
-      locationType: "current"
-    });
+      locationType: "current",
+      addressFound: true
+    };
+
+    saveLocationToStorage(finalLocationData);
 
     console.log("Current location saved.");
 
-    updateScurbHomeLocation();
-    openScurbHomePage();
-
   } catch (error) {
-    saveLocationToStorage({
+
+    finalLocationData = {
       latitude,
       longitude,
       accuracy: accuracy ?? null,
       fullAddress: "",
       locationType: "current",
       addressFound: false
-    });
+    };
+
+    saveLocationToStorage(finalLocationData);
 
     console.error(
       "Coordinates saved, but address failed:",
       error
     );
-
-    updateScurbHomeLocation();
-    openScurbHomePage();
-
-  } finally {
-    hideCurrentLocationSpinner();
   }
+
+  hideCurrentLocationSpinner();
+
+  /* Login automatic location flow */
+  if(isAutomaticLoginLocation){
+
+    showAutomaticLocationResult(
+      finalLocationData
+    );
+
+    return;
+  }
+
+  /* Existing manual button flow */
+  updateScurbHomeLocation();
+  openScurbHomePage();
 }
 /* =========================
    MANUAL LOCATION ELEMENTS
@@ -729,7 +842,10 @@ window.onScrubMateLocationReceived =
   };
   function handleBrowserLocationError(error) {
 
-  if (error.code === error.PERMISSION_DENIED) {
+  hideCurrentLocationSpinner();
+
+  if(error.code === error.PERMISSION_DENIED){
+
     localStorage.setItem(
       "scurbMateLocationPermission",
       "denied"
@@ -737,6 +853,8 @@ window.onScrubMateLocationReceived =
   }
 
   console.error("Location error:", error);
+
+  handleAutomaticLocationFailure();
 }
 /* =========================
    CONFIRM AND SAVE SILENTLY
